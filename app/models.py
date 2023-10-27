@@ -15,7 +15,7 @@ class User(db.Model):
     username = db.Column(db.String(16), unique = True, nullable = False)
     password = db.Column(db.String(256), nullable = False)
 
-    posts = db.relationship("Post", backref="user")
+    posts = db.relationship("Post", backref="made")
     likes = db.relationship("Like", backref="liked_post")
 
 
@@ -68,14 +68,14 @@ class Post(db.Model):
     created_by = db.Column(db.String(64), db.ForeignKey("user.id"), nullable = False)
 
     author = db.relationship("User", backref="author")
-    likes = db.relationship("User", backref="liked_by")
+    likes = db.relationship("Like", backref="liked")
 
-    def __init__(self, img_url, title,  caption, created_by):
+    def __init__(self, img_url, title,  caption, author):
         self.id = str(uuid4())
         self.img_url = img_url
         self.title = title
         self.caption = caption
-        self.created_by = created_by
+        self.created_by = author
         
     def create(self):
         db.session.add(self)
